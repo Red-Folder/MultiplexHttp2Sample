@@ -17,19 +17,39 @@ namespace Http2
                 var request2 = new HttpRequestMessage(HttpMethod.Get, "https://www.google.com");
                 request2.Version = new Version(2, 0);
 
-                var task1 = httpClient.SendAsync(request1);
-                var task2 = httpClient.SendAsync(request2);
+                var wrapper1 = new RequestWrapper(httpClient, request1, 1);
+                var thread1 = new Thread(wrapper1.SendRequest);
 
-                Task.WaitAll(task1, task2);
+                var wrapper2 = new RequestWrapper(httpClient, request2, 2);
+                var thread2 = new Thread(wrapper2.SendRequest);
 
-                var response1 = task1.Result;
-                var response2 = task2.Result;
+                thread1.Start();
+                thread2.Start();
 
-                Console.WriteLine($"Response 1 - Http Version: {response1.Version}, Http Status Code: {response1.StatusCode}");
-                Console.WriteLine($"Response 2 - Http Version: {response2.Version}, Http Status Code: {response2.StatusCode}");
+                // Move inside the using to avoid HttpClient being disposed before threads complete
+                Console.ReadLine();
             }
 
-            Console.ReadLine();
+        }
+
+        private class RequestWrapper
+        {
+            private readonly HttpClient _client;
+            private readonly HttpRequestMessage _request;
+            private readonly int _id;
+
+            public RequestWrapper(HttpClient client, HttpRequestMessage request, int id)
+            {
+                _client = client;
+                _request = request;
+                _id = id;
+            }
+
+            public void SendRequest()
+            {
+                var response = _client.SendAsync(_request).Result;
+                Console.WriteLine($"Response {_id} - Http Version: {response.Version}, Http Status Code: {response.StatusCode}");
+            }
         }
     }
 }
