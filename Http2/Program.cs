@@ -25,8 +25,8 @@ namespace Http2
                 var response1 = task1.Result;
                 var response2 = task2.Result;
 
-                Console.WriteLine($"Response 1 - Http Verion: {response1.Version}, Http Status Code: {response1.StatusCode}");
-                Console.WriteLine($"Response 2 - Http Verion: {response2.Version}, Http Status Code: {response2.StatusCode}");
+                Console.WriteLine($"Response 1 - Http Version: {response1.Version}, Http Status Code: {response1.StatusCode}");
+                Console.WriteLine($"Response 2 - Http Version: {response2.Version}, Http Status Code: {response2.StatusCode}");
             }
 
             Console.ReadLine();
