@@ -11,11 +11,19 @@ namespace Http2
         {
             using (var httpClient = new HttpClient())
             {
+                var request0 = new HttpRequestMessage(HttpMethod.Get, "https://www.google.com");
+                request0.Version = new Version(2, 0);
+                var response0 = httpClient.SendAsync(request0).Result;
+                Console.WriteLine($"Response 0 - Http Version: {response0.Version}, Http Status Code: {response0.StatusCode}");
+
+
                 var request1 = new HttpRequestMessage(HttpMethod.Get, "https://www.google.com");
                 request1.Version = new Version(2, 0);
 
                 var request2 = new HttpRequestMessage(HttpMethod.Get, "https://www.google.com");
                 request2.Version = new Version(2, 0);
+
+
 
                 var wrapper1 = new RequestWrapper(httpClient, request1, 1);
                 var thread1 = new Thread(wrapper1.SendRequest);
