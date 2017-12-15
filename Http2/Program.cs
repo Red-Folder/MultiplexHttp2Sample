@@ -11,6 +11,16 @@ namespace Http2
         {
             using (var httpClient = new HttpClient())
             {
+                // Setup first connection
+                var request0 = new HttpRequestMessage(HttpMethod.Get, "https://www.google.com");
+                request0.Version = new Version(2, 0);
+
+                var task0 = httpClient.SendAsync(request0);
+                var response0 = task0.Result;
+
+                Console.WriteLine($"Response 0 - Http Version: {response0.Version}, Http Status Code: {response0.StatusCode}");
+
+                // Now send the multiplexed requests
                 var request1 = new HttpRequestMessage(HttpMethod.Get, "https://www.google.com");
                 request1.Version = new Version(2, 0);
 
